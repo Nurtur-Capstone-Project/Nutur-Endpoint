@@ -5,7 +5,10 @@ import numpy as np
 import tensorflow as tf
 import traceback
 import time
+from google.cloud import storage
 
+storage_client = storage.Client()
+bucket = storage_client.get_bucket("model-resnet")
 model = tf.keras.models.load_model('./ResNet50V2_Model.h5')
 app = FastAPI()
 
