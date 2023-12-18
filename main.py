@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, Respon
+from fastapi import FastAPI, File, UploadFile, Response
 import uvicorn
 from PIL import Image
 import numpy as np
@@ -6,7 +6,7 @@ import tensorflow as tf
 import traceback
 import time
 
-model = tf.keras.models.load_model('./ResNet50V2_Model.h5')
+model = tf.keras.models.load_model('ResNet50V2_Model.h5')
 app = FastAPI()
 
 
@@ -88,7 +88,7 @@ async def predict(file: UploadFile = File(...)):
         return {"message": "Internal Server Error"}
 
 
-if __name__ == '_main_':
+if __name__ == '__main__':
     port = 8001
     print(f"Listening to http://0.0.0.0:{port}")
     uvicorn.run(app, host='0.0.0.0', port=port)   
