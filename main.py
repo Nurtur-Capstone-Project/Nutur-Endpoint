@@ -1,14 +1,11 @@
-from fastapi import FastAPI, File, UploadFile, Response
+from fastapi import FastAPI, File, UploadFile, Respon
 import uvicorn
 from PIL import Image
 import numpy as np
 import tensorflow as tf
 import traceback
 import time
-from google.cloud import storage
 
-storage_client = storage.Client()
-bucket = storage_client.get_bucket("model-resnet")
 model = tf.keras.models.load_model('./ResNet50V2_Model.h5')
 app = FastAPI()
 
@@ -23,7 +20,7 @@ async def predict(file: UploadFile = File(...)):
     try:
         image = Image.open(file.file)
         image = np.asarray(image.resize((224, 224)))
-        # image = image/*apakah modelnya terdapat preprocessing normalization ?. if true (image/255), if else (null).
+        # image = image/*apakah modelnya terdapat preprocessing normalization ?. if true (image/255), else if (null).
         image = (image/255)
         image = np.expand_dims(image, 0)
 
@@ -49,7 +46,6 @@ async def predict(file: UploadFile = File(...)):
                 "accuracy": float(accuracy),
                 "time_predict": float(time_predict)
                 }
-
         elif prediction == 2:
             return {
                 'id': '3',
@@ -95,5 +91,4 @@ async def predict(file: UploadFile = File(...)):
 if __name__ == '_main_':
     port = 8001
     print(f"Listening to http://0.0.0.0:{port}")
-    uvicorn.run(app, host='0.0.0.0', port=port)
-
+    uvicorn.run(app, host='0.0.0.0', port=port)   
